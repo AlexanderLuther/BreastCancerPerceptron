@@ -1,0 +1,6 @@
+# Ignorar todos los archivos de caché de Python
+__pycache__/
+*.pyc
+
+
+.idea
