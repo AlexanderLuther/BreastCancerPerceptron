@@ -41,6 +41,11 @@ class ConfigurationFrame(tk.Frame):
         self.epochs_entry = tk.Entry(self, validate="key", validatecommand=epoch_validator)
         self.epochs_entry.pack(pady=5)
 
+        percentage_validator = (self.register(self.__validate_percentage), "%P")
+        tk.Label(self, text="Porcentaje de datos para entrenar (%)").pack()
+        self.train_percentage_entry = tk.Entry(self, validate="key", validatecommand=percentage_validator)
+        self.train_percentage_entry.pack(pady=5)
+
         tk.Button(self, text="Entrenar Perceptrón", command=self.train_method).pack(pady=15)
 
     def __validate_epochs(self, value):
@@ -61,6 +66,14 @@ class ConfigurationFrame(tk.Frame):
             return True
         return False
 
+    def __validate_percentage(self, value_if_allowed):
+        if value_if_allowed == "":
+            return True
+        if value_if_allowed.isdigit():
+            value = int(value_if_allowed)
+            return 1 <= value <= 100
+        return False
+
     def get_selected_feature1(self):
         return self.feature1_combo.get()
 
@@ -69,6 +82,9 @@ class ConfigurationFrame(tk.Frame):
 
     def get_learning_rate(self):
         return self.learning_rate_entry.get()
+
+    def get_train_percentage(self):
+        return self.train_percentage_entry.get()
 
     def get_epochs(self):
         return self.epochs_entry.get()

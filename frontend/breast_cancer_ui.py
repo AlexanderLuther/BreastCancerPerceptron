@@ -4,7 +4,8 @@ import numpy as np
 from backend.exception.HellException import HellException
 from backend.file_reader import FileReader
 from backend.perceptron import Perceptron
-from backend.scatter_plotter import ScatterPlotter
+from backend.plotter.error_plotter import ErrorPlotter
+from backend.plotter.scatter_plotter import ScatterPlotter
 from frontend.configuration_frame import ConfigurationFrame
 from frontend.plot_frame import PlotFrame
 from tkinter import filedialog
@@ -22,13 +23,15 @@ FEATURE_NAMES = [
 class BreastCancerUI:
 
     def __init__(self):
-        self.data = None
-        self.file_reader = FileReader(headers=FEATURE_NAMES)
-        self.scatter_plotter = ScatterPlotter()
-
         self.root = tk.Tk()
         self.root.title("Clasificador de Cancer de Mama")
         self.root.geometry("800x600")
+
+        self.data = None
+        self.file_reader = FileReader(headers=FEATURE_NAMES)
+        self.scatter_plotter = ScatterPlotter()
+        self.error_plotter = ErrorPlotter(self.root)
+
         self.init()
         self.root.mainloop()
 
@@ -92,17 +95,26 @@ class BreastCancerUI:
         if self.general_required_data_is_complete(feature_x, feature_y):
             learning_rate = self.config_frame.get_learning_rate()
             epochs = self.config_frame.get_epochs()
+            train_percentage = self.config_frame.get_train_percentage()
             if not learning_rate:
                 messagebox.showerror("Error", "Tasa de aprendizaje no especificada", parent=self.root)
                 return
             if not epochs:
                 messagebox.showerror("Error", "Numero de epocas no especificado", parent=self.root)
                 return
-            converted_expected_outputs = self.data['diagnosis'].map({"M": 1, "B": 0})
+            if not train_percentage:
+                messagebox.showerror("Error", "Porcentaje de entrenamiento no especificado", parent=self.root)
+                return
+
+            inputs = np.array(self.data[[feature_x, feature_y]])
+            outputs = np.array(self.data["diagnosis"].map({"M": 1, "B": 0}))
+            train_size = int(len(inputs) * (int(train_percentage) / 100))
+            inputs_train = inputs[:train_size]
+            outputs_train = outputs[:train_size]
             perceptron = Perceptron(num_inputs=2)
             perceptron.train(
-                training_inputs=np.array(self.data[[feature_x, feature_y]]),
-                expected_outputs=np.array(converted_expected_outputs),
+                training_inputs=inputs_train,
+                expected_outputs=outputs_train,
                 epochs=int(epochs),
                 learning_rate=float(learning_rate)
             )
@@ -113,7 +125,7 @@ class BreastCancerUI:
                 plot_frame=self.plot_frame,
                 perceptron=perceptron
             )
-
+            self.error_plotter.plot(perceptron.get_errors_per_epoch())
 
 
     def general_required_data_is_complete(self, feature_x, feature_y):

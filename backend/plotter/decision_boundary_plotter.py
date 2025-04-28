@@ -5,16 +5,6 @@ class DecisionBoundaryPlotter:
         pass
 
     def plot(self, ax, data, feature_x, feature_y, perceptron):
-        """
-        Dibuja solo la frontera de decisión sobre un eje (ax).
-
-        Parámetros:
-        - ax: el eje de matplotlib donde dibujar.
-        - data: DataFrame con los datos (para tomar el rango de valores).
-        - feature_x: nombre del feature para X.
-        - feature_y: nombre del feature para Y.
-        - perceptron: Perceptron entrenado.
-        """
         # Set range for x and y
         x_min, x_max = data[feature_x].min() - 1, data[feature_x].max() + 1
         y_min, y_max = data[feature_y].min() - 1, data[feature_y].max() + 1

@@ -3,7 +3,7 @@ import tkinter as tk
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-from backend.decision_boundary_plotter import DecisionBoundaryPlotter
+from backend.plotter.decision_boundary_plotter import DecisionBoundaryPlotter
 
 class ScatterPlotter:
     def __init__(self):
