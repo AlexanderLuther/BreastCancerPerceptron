@@ -1,4 +1,3 @@
-#%% md
 # Clasificador de Cáncer de Mama - Manual Técnico
 
 ## Descripción General
@@ -21,7 +20,6 @@ Este proyecto implementa un clasificador de cáncer de mama utilizando un Percep
 │   └── configuration_frame.py  
 ├── 📁 resources/  
 ├── main.py  
-#%%
 
 ## Componentes Principales
 
