@@ -1,7 +1,6 @@
 import tkinter as tk
 
 import numpy as np
-
 from backend.exception.HellException import HellException
 from backend.file_reader import FileReader
 from backend.perceptron import Perceptron
@@ -26,7 +25,6 @@ class BreastCancerUI:
         self.data = None
         self.file_reader = FileReader(headers=FEATURE_NAMES)
         self.scatter_plotter = ScatterPlotter()
-        self.perceptron = Perceptron(num_inputs=2)
 
         self.root = tk.Tk()
         self.root.title("Clasificador de Cancer de Mama")
@@ -101,7 +99,8 @@ class BreastCancerUI:
                 messagebox.showerror("Error", "Numero de epocas no especificado", parent=self.root)
                 return
             converted_expected_outputs = self.data['diagnosis'].map({"M": 1, "B": 0})
-            self.perceptron.train(
+            perceptron = Perceptron(num_inputs=2)
+            perceptron.train(
                 training_inputs=np.array(self.data[[feature_x, feature_y]]),
                 expected_outputs=np.array(converted_expected_outputs),
                 epochs=int(epochs),
@@ -112,7 +111,7 @@ class BreastCancerUI:
                 feature_x=feature_x,
                 feature_y=feature_y,
                 plot_frame=self.plot_frame,
-                perceptron=self.perceptron
+                perceptron=perceptron
             )
 
 
